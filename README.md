@@ -21,3 +21,10 @@ The trade-off: keys are always sorted alphabetically with `localeCompare` (base 
 - `undefined` values in objects are dropped (standard `JSON.stringify` behavior). If you need a placeholder, use `null` explicitly.
 - Circular references and `BigInt` throw synchronously. The library does not coerce or swallow — a logger that silently drops fields is worse than one that fails loudly.
 - The sink is a duck type: anything with `write(line)`. The library does not import Node's `stream` module, so it works in any environment that provides a writable sink.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
